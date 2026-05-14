@@ -532,11 +532,6 @@ body::before {
 }
 .radar-modal-content img { max-width: 100%; max-height: 68vh; border-radius: 8px; transition: opacity 0.25s; }
 .radar-modal-img-wrap { position: relative; display: inline-block; }
-.radar-modal-hint {
-  font-size: 11px; color: var(--text-muted); margin-top: 8px;
-  animation: hintFade 2.5s ease-in-out infinite;
-}
-.radar-modal-hint.switched { color: var(--gold-light); }
 .radar-modal-close {
   position: absolute; top: 10px; right: 14px;
   width: 30px; height: 30px; border-radius: 50%;
@@ -833,7 +828,6 @@ body::before {
     <div class="radar-modal-img-wrap" id="radarImgWrap">
       <img id="radarImg" src="" alt="" />
     </div>
-    <div class="radar-modal-hint" id="radarHint">长按图片查看雷达图</div>
   </div>
 </div>
 
@@ -846,21 +840,21 @@ body::before {
 <script>
 // ==================== PLAYER DB ====================
 const PLAYERS = [
-  {name:'梁学明',rarity:'SSR',ovr:126,pos:'SF/PF',style:'全能型球员',img:'球员界面图/梁学明.jpg',radar:'球员雷达图/梁学明.jpg'},
-  {name:'周杰龙',rarity:'SR',ovr:122,pos:'SG/SF',style:'进攻万花筒',img:'球员界面图/周杰龙.jpg',radar:'球员雷达图/周杰龙.jpg'},
-  {name:'吴宇轩',rarity:'SR',ovr:120,pos:'SF',style:'进攻万花筒',img:'球员界面图/吴宇轩.jpg',radar:'球员雷达图/吴宇轩.jpg'},
-  {name:'蒋子豪',rarity:'S',ovr:115,pos:'SG/C',style:'锁防精英',img:'球员界面图/蒋子豪.jpg',radar:'球员雷达图/蒋子豪.jpg'},
-  {name:'吴润琪',rarity:'S',ovr:114,pos:'SG/SF',style:'攻防双向球员',img:'球员界面图/吴润琪.jpg',radar:'球员雷达图/吴润琪.jpg'},
-  {name:'张爽',rarity:'S',ovr:113,pos:'C/PF',style:'篮板精英',img:'球员界面图/张爽.jpg',radar:'球员雷达图/张爽.jpg'},
-  {name:'章世贸',rarity:'A',ovr:112,pos:'PG/SG',style:'进攻万花筒',img:'球员界面图/章世贸.jpg',radar:'球员雷达图/章世贸.jpg'},
-  {name:'朱卓人',rarity:'A',ovr:109,pos:'SG/SF',style:'中距离终结者',img:'球员界面图/朱卓人.jpg',radar:'球员雷达图/朱卓人.jpg'},
-  {name:'冯丁禹',rarity:'A',ovr:108,pos:'SG/C',style:'锁防精英',img:'球员界面图/冯丁禹.jpg',radar:'球员雷达图/冯丁禹.jpg'},
-  {name:'徐文景',rarity:'B',ovr:108,pos:'PF/C',style:'背身得分手',img:'球员界面图/徐文景.jpg',radar:'球员雷达图/徐文景.jpg'},
-  {name:'孙屹栋',rarity:'B',ovr:104,pos:'SF/PF',style:'外线封锁者',img:'球员界面图/孙屹栋.jpg',radar:'球员雷达图/孙屹栋.jpg'},
-  {name:'姜钧',rarity:'B',ovr:102,pos:'PG/SG',style:'外线封锁者',img:'球员界面图/姜钧.jpg',radar:'球员雷达图/姜钧.jpg'},
-  {name:'刘郑伟',rarity:'C',ovr:99,pos:'PF/C',style:'接球投篮手',img:'球员界面图/刘郑伟.jpg',radar:'球员雷达图/刘郑伟.jpg'},
-  {name:'萧礼强',rarity:'C',ovr:97,pos:'PG/SG',style:'接球投篮手',img:'球员界面图/萧礼强.jpg',radar:'球员雷达图/萧礼强.jpg'},
-  {name:'陈艺文',rarity:'C',ovr:96,pos:'PG/SG',style:'潜力待发掘',img:'球员界面图/陈艺文.jpg',radar:'球员雷达图/陈艺文.jpg'}
+  {name:'梁学明',rarity:'SSR',ovr:126,pos:'SF/PF',style:'全能型球员',img:'球员界面图/梁学明.jpg'},
+  {name:'周杰龙',rarity:'SR',ovr:122,pos:'SG/SF',style:'进攻万花筒',img:'球员界面图/周杰龙.jpg'},
+  {name:'吴宇轩',rarity:'SR',ovr:120,pos:'SF',style:'进攻万花筒',img:'球员界面图/吴宇轩.jpg'},
+  {name:'蒋子豪',rarity:'S',ovr:115,pos:'SG/C',style:'锁防精英',img:'球员界面图/蒋子豪.jpg'},
+  {name:'吴润琪',rarity:'S',ovr:114,pos:'SG/SF',style:'攻防双向球员',img:'球员界面图/吴润琪.jpg'},
+  {name:'张爽',rarity:'S',ovr:113,pos:'C/PF',style:'篮板精英',img:'球员界面图/张爽.jpg'},
+  {name:'章世贸',rarity:'A',ovr:112,pos:'PG/SG',style:'进攻万花筒',img:'球员界面图/章世贸.jpg'},
+  {name:'朱卓人',rarity:'A',ovr:109,pos:'SG/SF',style:'中距离终结者',img:'球员界面图/朱卓人.jpg'},
+  {name:'冯丁禹',rarity:'A',ovr:108,pos:'SG/C',style:'锁防精英',img:'球员界面图/冯丁禹.jpg'},
+  {name:'徐文景',rarity:'B',ovr:108,pos:'PF/C',style:'背身得分手',img:'球员界面图/徐文景.jpg'},
+  {name:'孙屹栋',rarity:'B',ovr:104,pos:'SF/PF',style:'外线封锁者',img:'球员界面图/孙屹栋.jpg'},
+  {name:'姜钧',rarity:'B',ovr:102,pos:'PG/SG',style:'外线封锁者',img:'球员界面图/姜钧.jpg'},
+  {name:'刘郑伟',rarity:'C',ovr:99,pos:'PF/C',style:'接球投篮手',img:'球员界面图/刘郑伟.jpg'},
+  {name:'萧礼强',rarity:'C',ovr:97,pos:'PG/SG',style:'接球投篮手',img:'球员界面图/萧礼强.jpg'},
+  {name:'陈艺文',rarity:'C',ovr:96,pos:'PG/SG',style:'潜力待发掘',img:'球员界面图/陈艺文.jpg'}
 ];
 
 const RARITY_WEIGHTS = {SSR:1,SR:2,S:5,A:10,B:20,C:37};
@@ -999,63 +993,17 @@ function showBurst(){
 }
 
 // ==================== CARD PREVIEW MODAL ====================
-let currentPreviewPlayer = null;
-let showingRadar = false;
-
 function openRadar(player){
-  currentPreviewPlayer = player;
-  showingRadar = false;
   $radarName.textContent=player.name+' · '+player.ovr;
   $radarRarity.innerHTML='<span style="display:inline-block;padding:3px 12px;border-radius:12px;font-size:13px;font-weight:700;background:'+RARITY_COLORS[player.rarity].hex+';color:'+(player.rarity==='SSR'||player.rarity==='A'?'#0a0a10':'#fff')+'">'+player.rarity+'</span>';
   $radarImg.src=player.img;
-  $radarImg.style.opacity='1';
-  document.getElementById('radarHint').textContent='长按图片查看雷达图';
-  document.getElementById('radarHint').classList.remove('switched');
   $radarModal.classList.add('active');
   document.body.style.overflow='hidden';
 }
-
-function toggleRadarCard(){
-  if(!currentPreviewPlayer)return;
-  showingRadar=!showingRadar;
-  const src=showingRadar?currentPreviewPlayer.radar:currentPreviewPlayer.img;
-  $radarImg.style.opacity='0';
-  setTimeout(()=>{
-    $radarImg.src=src;
-    $radarImg.style.opacity='1';
-  },200);
-  const hint=document.getElementById('radarHint');
-  hint.textContent=showingRadar?'长按图片查看卡面':'长按图片查看雷达图';
-  hint.classList.toggle('switched',showingRadar);
-}
-
 function closeRadar(){
   $radarModal.classList.remove('active');
   document.body.style.overflow='';
-  currentPreviewPlayer=null;
-  showingRadar=false;
 }
-
-// Long-press handler
-let longPressTimer=null;
-$radarImg.addEventListener('mousedown',startLongPress);
-$radarImg.addEventListener('touchstart',startLongPress,{passive:false});
-$radarImg.addEventListener('mouseup',cancelLongPress);
-$radarImg.addEventListener('touchend',cancelLongPress);
-$radarImg.addEventListener('mouseleave',cancelLongPress);
-$radarImg.addEventListener('touchcancel',cancelLongPress);
-$radarImg.addEventListener('click',function(e){
-  if(longPressFired){e.preventDefault();longPressFired=false;}
-});
-let longPressFired=false;
-function startLongPress(e){
-  longPressFired=false;
-  longPressTimer=setTimeout(()=>{
-    longPressFired=true;
-    toggleRadarCard();
-  },500);
-}
-function cancelLongPress(){clearTimeout(longPressTimer);}
 $radarModalClose.addEventListener('click',(e)=>{e.stopPropagation();closeRadar();});
 $radarModal.addEventListener('click',function(e){if(e.target===$radarModal)closeRadar();});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeRadar();});
@@ -1182,7 +1130,7 @@ updateStats();
 // ==================== PRELOAD ====================
 (function(){
   var all=[];
-  PLAYERS.forEach(function(p){all.push(p.img);all.push(p.radar);});
+  PLAYERS.forEach(function(p){all.push(p.img);});
   var total=all.length;
   var loaded=0;
   var $bar=document.getElementById('loadingBar');
