@@ -582,25 +582,6 @@ body::before {
   font-size: 24px; color: var(--text-muted);
 }
 
-/* Loading Screen */
-.loading-screen {
-  position: fixed; inset: 0; z-index: 9999;
-  background: var(--bg-deep);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  transition: opacity 0.5s, visibility 0.5s;
-}
-.loading-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-.loading-logo { font-size: 48px; margin-bottom: 12px; animation: packFloat 2s ease-in-out infinite; }
-.loading-title {
-  font-size: 22px; font-weight: 800; margin-bottom: 4px;
-  background: linear-gradient(135deg, var(--purple-light), var(--gold));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.loading-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
-.loading-bar-wrap { width: 240px; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
-.loading-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--purple-neon), var(--gold)); border-radius: 2px; transition: width 0.3s; }
-.loading-count { font-size: 12px; color: var(--text-secondary); margin-top: 8px; }
-
 .collection-card .cc-rarity {
   font-size: 8px; font-weight: 700; padding: 2px 6px; border-radius: 6px;
   margin-bottom: 4px; display: inline-block;
@@ -660,17 +641,6 @@ body::before {
 </style>
 </head>
 <body>
-
-<!-- Loading Screen -->
-<div class="loading-screen" id="loadingScreen">
-  <div class="loading-logo">&#127936;</div>
-  <div class="loading-title">校园2K · 梦幻抽卡</div>
-  <div class="loading-sub">加载球员卡面中...</div>
-  <div class="loading-bar-wrap">
-    <div class="loading-bar-fill" id="loadingBar"></div>
-  </div>
-  <div class="loading-count" id="loadingCount">0 / 30</div>
-</div>
 
 <!-- Background canvas -->
 <canvas id="bgCanvas"></canvas>
@@ -770,23 +740,22 @@ body::before {
      ============================================ -->
 <script>
 // ==================== PLAYER DB ====================
-const CDN = 'https://cdn.jsdelivr.net/gh/wug65808-art/campus-2k@main';
 const PLAYERS = [
-  {name:'梁学明',rarity:'SSR',ovr:126,pos:'SF/PF',style:'全能型球员',img:CDN+'/球员界面图/梁学明.jpg',radar:CDN+'/球员雷达图/梁学明.jpg'},
-  {name:'周杰龙',rarity:'SR',ovr:122,pos:'SG/SF',style:'进攻万花筒',img:CDN+'/球员界面图/周杰龙.jpg',radar:CDN+'/球员雷达图/周杰龙.jpg'},
-  {name:'吴宇轩',rarity:'SR',ovr:120,pos:'SF',style:'进攻万花筒',img:CDN+'/球员界面图/吴宇轩.jpg',radar:CDN+'/球员雷达图/吴宇轩.jpg'},
-  {name:'蒋子豪',rarity:'S',ovr:115,pos:'SG/C',style:'锁防精英',img:CDN+'/球员界面图/蒋子豪.jpg',radar:CDN+'/球员雷达图/蒋子豪.jpg'},
-  {name:'吴润琪',rarity:'S',ovr:114,pos:'SG/SF',style:'攻防双向球员',img:CDN+'/球员界面图/吴润琪.jpg',radar:CDN+'/球员雷达图/吴润琪.jpg'},
-  {name:'张爽',rarity:'S',ovr:113,pos:'C/PF',style:'篮板精英',img:CDN+'/球员界面图/张爽.jpg',radar:CDN+'/球员雷达图/张爽.jpg'},
-  {name:'章世贸',rarity:'A',ovr:112,pos:'PG/SG',style:'进攻万花筒',img:CDN+'/球员界面图/章世贸.jpg',radar:CDN+'/球员雷达图/章世贸.jpg'},
-  {name:'朱卓人',rarity:'A',ovr:109,pos:'SG/SF',style:'中距离终结者',img:CDN+'/球员界面图/朱卓人.jpg',radar:CDN+'/球员雷达图/朱卓人.jpg'},
-  {name:'冯丁禹',rarity:'A',ovr:108,pos:'SG/C',style:'锁防精英',img:CDN+'/球员界面图/冯丁禹.jpg',radar:CDN+'/球员雷达图/冯丁禹.jpg'},
-  {name:'徐文景',rarity:'B',ovr:108,pos:'PF/C',style:'背身得分手',img:CDN+'/球员界面图/徐文景.jpg',radar:CDN+'/球员雷达图/徐文景.jpg'},
-  {name:'孙屹栋',rarity:'B',ovr:104,pos:'SF/PF',style:'外线封锁者',img:CDN+'/球员界面图/孙屹栋.jpg',radar:CDN+'/球员雷达图/孙屹栋.jpg'},
-  {name:'姜钧',rarity:'B',ovr:102,pos:'PG/SG',style:'外线封锁者',img:CDN+'/球员界面图/姜钧.jpg',radar:CDN+'/球员雷达图/姜钧.jpg'},
-  {name:'刘郑伟',rarity:'C',ovr:99,pos:'PF/C',style:'接球投篮手',img:CDN+'/球员界面图/刘郑伟.jpg',radar:CDN+'/球员雷达图/刘郑伟.jpg'},
-  {name:'萧礼强',rarity:'C',ovr:97,pos:'PG/SG',style:'接球投篮手',img:CDN+'/球员界面图/萧礼强.jpg',radar:CDN+'/球员雷达图/萧礼强.jpg'},
-  {name:'陈艺文',rarity:'C',ovr:96,pos:'PG/SG',style:'潜力待发掘',img:CDN+'/球员界面图/陈艺文.jpg',radar:CDN+'/球员雷达图/陈艺文.jpg'}
+  {name:'梁学明',rarity:'SSR',ovr:126,pos:'SF/PF',style:'全能型球员',img:'球员界面图/梁学明.jpg',radar:'球员雷达图/梁学明.jpg'},
+  {name:'周杰龙',rarity:'SR',ovr:122,pos:'SG/SF',style:'进攻万花筒',img:'球员界面图/周杰龙.jpg',radar:'球员雷达图/周杰龙.jpg'},
+  {name:'吴宇轩',rarity:'SR',ovr:120,pos:'SF',style:'进攻万花筒',img:'球员界面图/吴宇轩.jpg',radar:'球员雷达图/吴宇轩.jpg'},
+  {name:'蒋子豪',rarity:'S',ovr:115,pos:'SG/C',style:'锁防精英',img:'球员界面图/蒋子豪.jpg',radar:'球员雷达图/蒋子豪.jpg'},
+  {name:'吴润琪',rarity:'S',ovr:114,pos:'SG/SF',style:'攻防双向球员',img:'球员界面图/吴润琪.jpg',radar:'球员雷达图/吴润琪.jpg'},
+  {name:'张爽',rarity:'S',ovr:113,pos:'C/PF',style:'篮板精英',img:'球员界面图/张爽.jpg',radar:'球员雷达图/张爽.jpg'},
+  {name:'章世贸',rarity:'A',ovr:112,pos:'PG/SG',style:'进攻万花筒',img:'球员界面图/章世贸.jpg',radar:'球员雷达图/章世贸.jpg'},
+  {name:'朱卓人',rarity:'A',ovr:109,pos:'SG/SF',style:'中距离终结者',img:'球员界面图/朱卓人.jpg',radar:'球员雷达图/朱卓人.jpg'},
+  {name:'冯丁禹',rarity:'A',ovr:108,pos:'SG/C',style:'锁防精英',img:'球员界面图/冯丁禹.jpg',radar:'球员雷达图/冯丁禹.jpg'},
+  {name:'徐文景',rarity:'B',ovr:108,pos:'PF/C',style:'背身得分手',img:'球员界面图/徐文景.jpg',radar:'球员雷达图/徐文景.jpg'},
+  {name:'孙屹栋',rarity:'B',ovr:104,pos:'SF/PF',style:'外线封锁者',img:'球员界面图/孙屹栋.jpg',radar:'球员雷达图/孙屹栋.jpg'},
+  {name:'姜钧',rarity:'B',ovr:102,pos:'PG/SG',style:'外线封锁者',img:'球员界面图/姜钧.jpg',radar:'球员雷达图/姜钧.jpg'},
+  {name:'刘郑伟',rarity:'C',ovr:99,pos:'PF/C',style:'接球投篮手',img:'球员界面图/刘郑伟.jpg',radar:'球员雷达图/刘郑伟.jpg'},
+  {name:'萧礼强',rarity:'C',ovr:97,pos:'PG/SG',style:'接球投篮手',img:'球员界面图/萧礼强.jpg',radar:'球员雷达图/萧礼强.jpg'},
+  {name:'陈艺文',rarity:'C',ovr:96,pos:'PG/SG',style:'潜力待发掘',img:'球员界面图/陈艺文.jpg',radar:'球员雷达图/陈艺文.jpg'}
 ];
 
 const RARITY_WEIGHTS = {SSR:1,SR:2,S:5,A:10,B:20,C:37};
@@ -1104,28 +1073,6 @@ document.addEventListener('keydown',function(e){
 
 // ==================== INIT ====================
 updateStats();
-
-// ==================== PRELOAD ALL IMAGES ====================
-(function(){
-  const all=[];
-  PLAYERS.forEach(p=>{all.push(p.img);all.push(p.radar);});
-  const total=all.length;
-  let loaded=0;
-  const $bar=document.getElementById('loadingBar');
-  const $count=document.getElementById('loadingCount');
-  const $screen=document.getElementById('loadingScreen');
-  function tick(){
-    loaded++;
-    $bar.style.width=Math.round(loaded/total*100)+'%';
-    $count.textContent=loaded+' / '+total;
-    if(loaded>=total)setTimeout(()=>$screen.classList.add('hidden'),350);
-  }
-  all.forEach(src=>{
-    const img=new Image();
-    img.onload=tick;img.onerror=tick;
-    img.src=src;
-  });
-})();
 </script>
 </body>
 </html>
