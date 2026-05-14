@@ -1181,40 +1181,30 @@ updateStats();
 
 // ==================== PRELOAD ====================
 (function(){
-  const all=[];
-  PLAYERS.forEach(p=>{all.push({obj:p,key:'img',src:p.img});all.push({obj:p,key:'radar',src:p.radar});});
-  const total=all.length;
-  let loaded=0;
-  const $bar=document.getElementById('loadingBar');
-  const $count=document.getElementById('loadingCount');
-  const $screen=document.getElementById('loadingScreen');
+  var all=[];
+  PLAYERS.forEach(function(p){all.push(p.img);all.push(p.radar);});
+  var total=all.length;
+  var loaded=0;
+  var $bar=document.getElementById('loadingBar');
+  var $count=document.getElementById('loadingCount');
+  var $screen=document.getElementById('loadingScreen');
   $bar.style.width='0%';
   $count.textContent='0 / '+total;
-  function tick(){
-    loaded++;
+  var cacheDiv=document.createElement('div');
+  cacheDiv.style.display='none';
+  document.body.appendChild(cacheDiv);
+  all.forEach(function(src){
+    var img=document.createElement('img');
+    img.onload=function(){loaded++;updateProgress();};
+    img.onerror=function(){loaded++;updateProgress();};
+    img.src=src;
+    cacheDiv.appendChild(img);
+  });
+  function updateProgress(){
     $bar.style.width=Math.round(loaded/total*100)+'%';
     $count.textContent=loaded+' / '+total;
-    if(loaded>=total)finalize();
+    if(loaded>=total)setTimeout(function(){$screen.classList.add('hidden');},400);
   }
-  // Load each image, convert to Blob URL so they stay in browser memory
-  all.forEach(function(item){
-    var img=document.createElement('img');
-    img.crossOrigin='anonymous';
-    img.onload=function(){
-      try{
-        var c=document.createElement('canvas');
-        c.width=img.naturalWidth;c.height=img.naturalHeight;
-        var ctx=c.getContext('2d');
-        ctx.drawImage(img,0,0);
-        var blobUrl=c.toDataURL('image/jpeg',0.9);
-        item.obj[item.key]=blobUrl;
-      }catch(e){}
-      tick();
-    };
-    img.onerror=tick;
-    img.src=item.src;
-  });
-  function finalize(){setTimeout(function(){$screen.classList.add('hidden');},400);}
 })();
 </script>
 </body>
