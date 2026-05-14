@@ -1007,7 +1007,7 @@ function openRadar(player){
   showingRadar = false;
   $radarName.textContent=player.name+' · '+player.ovr;
   $radarRarity.innerHTML='<span style="display:inline-block;padding:3px 12px;border-radius:12px;font-size:13px;font-weight:700;background:'+RARITY_COLORS[player.rarity].hex+';color:'+(player.rarity==='SSR'||player.rarity==='A'?'#0a0a10':'#fff')+'">'+player.rarity+'</span>';
-  $radarImg.src=player.img+'?t='+Date.now();
+  $radarImg.src=player.img;
   $radarImg.style.opacity='1';
   document.getElementById('radarHint').textContent='长按图片查看雷达图';
   document.getElementById('radarHint').classList.remove('switched');
@@ -1021,7 +1021,7 @@ function toggleRadarCard(){
   const src=showingRadar?currentPreviewPlayer.radar:currentPreviewPlayer.img;
   $radarImg.style.opacity='0';
   setTimeout(()=>{
-    $radarImg.src=src+'?t='+Date.now();
+    $radarImg.src=src;
     $radarImg.style.opacity='1';
   },200);
   const hint=document.getElementById('radarHint');
